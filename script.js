@@ -6,28 +6,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let expenses = [];
 
-  expenseForm.addEventListener("submit", (e) => {
-      e.preventDefault();
+const storedExpenses = localStorage.getItem("expenses");
+if (storedExpenses) {
+    expenses = JSON.parse(storedExpenses);
+    displayExpenses(expenses);
+    updateTotalAmount();
+}
 
-      const name = document.getElementById("expense-name").value;
-      const amount = parseFloat(document.getElementById("expense-amount").value);
-      const category = document.getElementById("expense-category").value;
-      const date = document.getElementById("expense-date").value;
+expenseForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-      const expense = {
-          id: Date.now(),
-          name,
-          amount,
-          category,
-          date
-      };
+    const name = document.getElementById("expense-name").value;
+    const amount = parseFloat(document.getElementById("expense-amount").value);
+    const category = document.getElementById("expense-category").value;
+    const date = document.getElementById("expense-date").value;
 
-      expenses.push(expense);
-      displayExpenses(expenses);
-      updateTotalAmount();
+    const expense = {
+        id: Date.now(),
+        name,
+        amount,
+        category,
+        date
+    };
 
-      expenseForm.reset();
-  });
+    expenses.push(expense);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    displayExpenses(expenses);
+    updateTotalAmount();
+    expenseForm.reset();
+});
+
 
   expenseList.addEventListener("click", (e) => {
       if (e.target.classList.contains("delete-btn")) {
